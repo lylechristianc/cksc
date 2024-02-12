@@ -1,6 +1,7 @@
 package ph.edu.cksc.college.advweb.blog.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,22 +18,22 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("/products")
-    public ResponseEntity < List <Product>> getAllProduct() {
-        return ResponseEntity.ok().body(productService.getAllProduct());
+    public ResponseEntity <List<Product>> getProducts(@RequestParam(name = "query", required = false, defaultValue = "") String query) {
+        return ResponseEntity.ok(productService.getProducts(query));
     }
 
     @GetMapping("/products/{id}")
-    public ResponseEntity < Product > getProductById(@PathVariable long id) {
+    public ResponseEntity <Product> getProductById(@PathVariable long id) {
         return ResponseEntity.ok().body(productService.getProductById(id));
     }
 
     @PostMapping("/products")
-    public ResponseEntity < Product > createProduct(@RequestBody Product product) {
+    public ResponseEntity <Product> createProduct(@RequestBody Product product) {
         return ResponseEntity.ok().body(this.productService.createProduct(product));
     }
 
     @PutMapping("/products/{id}")
-    public ResponseEntity < Product > updateProduct(@PathVariable long id, @RequestBody Product product) {
+    public ResponseEntity <Product> updateProduct(@PathVariable long id, @RequestBody Product product) {
         product.setId(id);
         return ResponseEntity.ok().body(this.productService.updateProduct(product));
     }
@@ -41,10 +42,5 @@ public class ProductController {
     public HttpStatus deleteProduct(@PathVariable long id) {
         this.productService.deleteProduct(id);
         return HttpStatus.OK;
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<List<Product>> searchProducts(@RequestParam("query") String query){
-        return ResponseEntity.ok(productService.searchProducts(query));
     }
 }

@@ -26,7 +26,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product updateProduct(Product product) {
-        Optional < Product > productDb = this.productRepository.findById(product.getId());
+        Optional<Product> productDb = this.productRepository.findById(product.getId());
 
         if (productDb.isPresent()) {
             Product productUpdate = productDb.get();
@@ -42,14 +42,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List < Product > getAllProduct() {
-        return this.productRepository.findAll();
+    public List<Product> getProducts(String query) {
+        return productRepository.searchProducts(query);
     }
 
     @Override
     public Product getProductById(long productId) {
 
-        Optional < Product > productDb = this.productRepository.findById(productId);
+        Optional<Product> productDb = this.productRepository.findById(productId);
 
         if (productDb.isPresent()) {
             return productDb.get();
@@ -60,7 +60,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteProduct(long productId) {
-        Optional < Product > productDb = this.productRepository.findById(productId);
+        Optional<Product> productDb = this.productRepository.findById(productId);
 
         if (productDb.isPresent()) {
             this.productRepository.delete(productDb.get());
@@ -68,11 +68,5 @@ public class ProductServiceImpl implements ProductService {
             throw new ResourceNotFoundException("Record not found with id : " + productId);
         }
 
-    }
-
-    @Override
-    public List<Product> searchProducts(String query) {
-        List<Product> products = productRepository.searchProducts(query);
-        return products;
     }
 }
