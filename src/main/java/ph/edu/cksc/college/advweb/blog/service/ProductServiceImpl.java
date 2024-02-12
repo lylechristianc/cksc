@@ -1,14 +1,14 @@
 package ph.edu.cksc.college.advweb.blog.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ph.edu.cksc.college.advweb.blog.exception.ResourceNotFoundException;
 import ph.edu.cksc.college.advweb.blog.model.Product;
 import ph.edu.cksc.college.advweb.blog.repository.ProductRepository;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -26,10 +26,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product updateProduct(Product product) {
-        Optional<Product> productEntry = this.productRepository.findById(product.getId());
+        Optional < Product > productDb = this.productRepository.findById(product.getId());
 
-        if (productEntry.isPresent()) {
-            Product productUpdate = productEntry.get();
+        if (productDb.isPresent()) {
+            Product productUpdate = productDb.get();
             productUpdate.setId(product.getId());
             productUpdate.setName(product.getName());
             productUpdate.setDescription(product.getDescription());
@@ -42,17 +42,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getAllProduct() {
+    public List < Product > getAllProduct() {
         return this.productRepository.findAll();
     }
 
     @Override
     public Product getProductById(long productId) {
 
-        Optional <Product> productEntry = this.productRepository.findById(productId);
+        Optional < Product > productDb = this.productRepository.findById(productId);
 
-        if (productEntry.isPresent()) {
-            return productEntry.get();
+        if (productDb.isPresent()) {
+            return productDb.get();
         } else {
             throw new ResourceNotFoundException("Record not found with id : " + productId);
         }
@@ -60,13 +60,19 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteProduct(long productId) {
-        Optional <Product> productEntry = this.productRepository.findById(productId);
+        Optional < Product > productDb = this.productRepository.findById(productId);
 
-        if (productEntry.isPresent()) {
-            this.productRepository.delete(productEntry.get());
+        if (productDb.isPresent()) {
+            this.productRepository.delete(productDb.get());
         } else {
             throw new ResourceNotFoundException("Record not found with id : " + productId);
         }
 
+    }
+
+    @Override
+    public List<Product> searchProducts(String query) {
+        List<Product> products = productRepository.searchProducts(query);
+        return products;
     }
 }
