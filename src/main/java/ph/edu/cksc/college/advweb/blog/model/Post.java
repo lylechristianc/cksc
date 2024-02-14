@@ -3,7 +3,6 @@ package ph.edu.cksc.college.advweb.blog.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 
@@ -19,8 +18,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "posts")
+public class Post {
 
     @JsonView(View.Summary.class)
     @Id
@@ -28,23 +27,27 @@ public class User {
     private long id;
 
     @JsonView(View.Summary.class)
-    @Column(name = "name")
-    private String name;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @JsonView(View.Summary.class)
-    @Column(name = "login_name")
-    private String loginName;
+    @Column(name = "title")
+    private String title;
 
-    @JsonIgnore
-    @Column(name = "password")
-    private String password;
+    @JsonView(View.Summary.class)
+    @Column(name = "content")
+    private String content;
 
-    @Column(name = "role")
-    private int role;
+    @JsonView(View.Summary.class)
+    @Column(name = "published")
+    private boolean published;
 
+    @JsonView(View.Summary.class)
     @CreationTimestamp
     private Date createdAt;
 
+    @JsonView(View.Summary.class)
     @UpdateTimestamp
     private Date updatedAt;
 

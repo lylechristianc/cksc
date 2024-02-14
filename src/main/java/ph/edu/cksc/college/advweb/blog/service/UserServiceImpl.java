@@ -10,6 +10,8 @@ import ph.edu.cksc.college.advweb.blog.exception.ResourceNotFoundException;
 import ph.edu.cksc.college.advweb.blog.model.User;
 import ph.edu.cksc.college.advweb.blog.repository.UserRepository;
 
+import javax.swing.text.html.Option;
+
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
@@ -67,5 +69,10 @@ public class UserServiceImpl implements UserService {
             throw new ResourceNotFoundException("Record not found with id : " + userId);
         }
 
+    }
+
+    @Override
+    public Optional<User> findById(long id) {
+        return userRepository.findById(id);
     }
 }

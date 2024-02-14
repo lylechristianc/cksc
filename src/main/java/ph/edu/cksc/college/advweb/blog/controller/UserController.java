@@ -3,11 +3,14 @@ package ph.edu.cksc.college.advweb.blog.controller;
 import java.util.List;
 import java.util.Optional;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ph.edu.cksc.college.advweb.blog.model.Post;
 import ph.edu.cksc.college.advweb.blog.model.User;
+import ph.edu.cksc.college.advweb.blog.service.PostService;
 import ph.edu.cksc.college.advweb.blog.service.UserService;
 
 @RestController
@@ -42,5 +45,13 @@ public class UserController {
     public HttpStatus deleteUser(@PathVariable long id) {
         this.userService.deleteUser(id);
         return HttpStatus.OK;
+    }
+
+    @Autowired
+    private PostService postService;
+
+    @GetMapping("/users/{userId}/posts")
+    public List<Post> getPostsByUser(@PathVariable(value = "userId") Long userId) {
+        return postService.findByUserId(userId);
     }
 }

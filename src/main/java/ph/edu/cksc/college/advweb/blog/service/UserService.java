@@ -3,6 +3,7 @@ package ph.edu.cksc.college.advweb.blog.service;
 import ph.edu.cksc.college.advweb.blog.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
     User createUser(User user);
@@ -14,4 +15,6 @@ public interface UserService {
     User getUserById(long userId);
 
     void deleteUser(long id);
+
+    Optional<User> findById(long id);
 }
