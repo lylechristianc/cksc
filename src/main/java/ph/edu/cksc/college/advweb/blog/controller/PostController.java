@@ -2,16 +2,17 @@ package ph.edu.cksc.college.advweb.blog.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ph.edu.cksc.college.advweb.blog.model.Post;
 import ph.edu.cksc.college.advweb.blog.model.User;
 import ph.edu.cksc.college.advweb.blog.model.View;
-import ph.edu.cksc.college.advweb.blog.repository.UserRepository;
 import ph.edu.cksc.college.advweb.blog.service.PostService;
 import ph.edu.cksc.college.advweb.blog.service.UserService;
-
 
 import java.util.List;
 import java.util.Optional;
@@ -28,8 +29,15 @@ public class PostController {
 
     @JsonView(View.Summary.class)
     @GetMapping("/posts")
-    public ResponseEntity<List<Post>> getPosts(@RequestParam(name = "query", required = false, defaultValue = "") String query) {
-        return ResponseEntity.ok(postService.getPosts(query));
+    public ResponseEntity<List<Post>> getPosts(
+            @RequestParam(name = "query", required = false, defaultValue = "") String query,
+            @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(name = "size", required = false, defaultValue = "5") int size,
+            @RequestParam(name = "sort", required = false, defaultValue = "id") String sortBy,
+            @RequestParam(name = "dir", required = false, defaultValue = "ASC") String sortDir) {
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDir), sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return ResponseEntity.ok(postService.getPosts(query, pageable).getContent());
     }
 
     @JsonView(View.Summary.class)

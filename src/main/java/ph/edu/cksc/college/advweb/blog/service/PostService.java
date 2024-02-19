@@ -1,5 +1,7 @@
 package ph.edu.cksc.college.advweb.blog.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import ph.edu.cksc.college.advweb.blog.model.Post;
 
 import java.util.List;
@@ -9,12 +11,11 @@ public interface PostService {
 
     Post updatePost(Post post);
 
-    List<Post> getPosts(String query);
+    Page<Post> getPosts(String query, Pageable pageable);
 
     Post getPostById(long postId);
 
     void deletePost(long id);
 
-    List<Post> findByUserId(Long userId);
-
+    List<Post> findByUserId(long userId);
 }

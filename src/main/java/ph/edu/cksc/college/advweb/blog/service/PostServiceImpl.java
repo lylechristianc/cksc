@@ -1,6 +1,8 @@
 package ph.edu.cksc.college.advweb.blog.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ph.edu.cksc.college.advweb.blog.exception.ResourceNotFoundException;
@@ -41,8 +43,10 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getPosts(String query) {
-        return postRepository.searchPosts(query);
+    public Page<Post> getPosts(String query, Pageable pageable) {
+        //return postRepository.searchPosts(query, pageable);
+        return postRepository.findByTitleContainingOrContentContaining(query, query, pageable);
+        //return postRepository.findAll(pageable);
     }
 
     @Override
@@ -70,7 +74,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> findByUserId(Long userId) {
+    public List<Post> findByUserId(long userId) {
         return postRepository.findByUserId(userId);
     }
 }
