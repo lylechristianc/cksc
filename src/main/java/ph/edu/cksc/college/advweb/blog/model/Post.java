@@ -32,7 +32,7 @@ public class Post {
     private User user;
 
     @JsonView(View.Summary.class)
-    @Column(name = "title")
+    @Column(name = "title", unique = true)
     private String title;
 
     @JsonView(View.Summary.class)

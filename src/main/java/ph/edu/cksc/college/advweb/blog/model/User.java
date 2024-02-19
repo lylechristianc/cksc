@@ -3,6 +3,7 @@ package ph.edu.cksc.college.advweb.blog.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
@@ -28,14 +29,14 @@ public class User {
     private long id;
 
     @JsonView(View.Summary.class)
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String name;
 
     @JsonView(View.Summary.class)
-    @Column(name = "login_name")
+    @Column(name = "login_name", unique = true)
     private String loginName;
 
-    @JsonIgnore
+    @JsonBackReference
     @Column(name = "password")
     private String password;
 
