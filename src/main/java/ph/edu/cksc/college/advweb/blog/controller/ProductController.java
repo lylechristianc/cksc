@@ -3,6 +3,7 @@ package ph.edu.cksc.college.advweb.blog.controller;
 import java.util.List;
 import java.util.Optional;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,12 +29,12 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public ResponseEntity <Product> createProduct(@RequestBody Product product) {
+    public ResponseEntity <Product> createProduct(@Valid @RequestBody Product product) {
         return ResponseEntity.ok().body(this.productService.createProduct(product));
     }
 
     @PutMapping("/products/{id}")
-    public ResponseEntity <Product> updateProduct(@PathVariable long id, @RequestBody Product product) {
+    public ResponseEntity <Product> updateProduct(@PathVariable long id, @Valid @RequestBody Product product) {
         product.setId(id);
         return ResponseEntity.ok().body(this.productService.updateProduct(product));
     }

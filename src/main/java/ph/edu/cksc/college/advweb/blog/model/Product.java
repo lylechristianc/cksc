@@ -5,10 +5,9 @@ import java.util.Date;
 
 import jakarta.persistence.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -25,12 +24,15 @@ public class Product {
     private long id;
 
     @Column(name = "name", unique = true)
+    @NotBlank(message = "Name is Required")
     private String name;
 
     @Column(name = "description")
+    @NotBlank(message = "Description is Required")
     private String description;
 
     @Column(name = "price")
+    @Min(value = 1, message = "Minimum price is 1.00")
     private BigDecimal price;
 
     @CreationTimestamp
