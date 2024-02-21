@@ -1,5 +1,8 @@
 package ph.edu.cksc.college.advweb.blog.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,9 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ph.edu.cksc.college.advweb.blog.exception.ResourceNotFoundException;
 import ph.edu.cksc.college.advweb.blog.model.Post;
 import ph.edu.cksc.college.advweb.blog.repository.PostRepository;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -21,7 +21,6 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post createPost(Post post) {
-
         return postRepository.save(post);
     }
 
@@ -46,7 +45,6 @@ public class PostServiceImpl implements PostService {
     public Page<Post> getPosts(String query, Pageable pageable) {
         //return postRepository.searchPosts(query, pageable);
         return postRepository.findByTitleContainingOrContentContaining(query, query, pageable);
-        //return postRepository.findAll(pageable);
     }
 
     @Override
@@ -76,5 +74,10 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<Post> findByUserId(long userId) {
         return postRepository.findByUserId(userId);
+    }
+
+    @Override
+    public Optional<Post> findById(long id) {
+        return postRepository.findById(id);
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import ph.edu.cksc.college.advweb.blog.model.Post;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PostService {
     Post createPost(Post post);
@@ -18,4 +19,7 @@ public interface PostService {
     void deletePost(long id);
 
     List<Post> findByUserId(long userId);
+
+    Optional<Post> findById(long id);
+
 }

@@ -8,9 +8,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ph.edu.cksc.college.advweb.blog.model.Comment;
 import ph.edu.cksc.college.advweb.blog.model.Post;
 import ph.edu.cksc.college.advweb.blog.model.User;
 import ph.edu.cksc.college.advweb.blog.model.View;
+import ph.edu.cksc.college.advweb.blog.service.CommentService;
 import ph.edu.cksc.college.advweb.blog.service.PostService;
 import ph.edu.cksc.college.advweb.blog.service.UserService;
 
@@ -23,6 +25,9 @@ public class PostController {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private CommentService commentService;
 
     @Autowired
     private UserService userService;
@@ -42,12 +47,12 @@ public class PostController {
 
     @JsonView(View.Summary.class)
     @GetMapping("/posts/{id}")
-    public ResponseEntity<Post> getPostById(@PathVariable long id) {
+    public ResponseEntity <Post> getPostById(@PathVariable long id) {
         return ResponseEntity.ok().body(postService.getPostById(id));
     }
 
     @PostMapping("/posts")
-    public ResponseEntity<Post> createPost(@RequestBody Post post) throws Exception {
+    public ResponseEntity <Post> createPost(@RequestBody Post post) throws Exception {
         long userId = post.getUser().getId();
         Optional<User> user = userService.findById(userId);
         user.ifPresent(post::setUser);
@@ -56,9 +61,8 @@ public class PostController {
         return ResponseEntity.ok().body(this.postService.createPost(post));
     }
 
-
     @PutMapping("/posts/{id}")
-    public ResponseEntity<Post> updatePost(@PathVariable long id, @RequestBody Post post) {
+    public ResponseEntity <Post> updatePost(@PathVariable long id, @RequestBody Post post) {
         post.setId(id);
         return ResponseEntity.ok().body(this.postService.updatePost(post));
     }
@@ -67,5 +71,10 @@ public class PostController {
     public HttpStatus deletePost(@PathVariable long id) {
         this.postService.deletePost(id);
         return HttpStatus.OK;
+    }
+
+    @GetMapping("/comments/{postId}/comments")
+    public List<Comment> getCommentsByPost(@PathVariable(value = "postId") Long postId) {
+        return commentService.findByPostId(postId);
     }
 }
