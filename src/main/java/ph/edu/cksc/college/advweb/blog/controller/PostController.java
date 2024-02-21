@@ -47,11 +47,15 @@ public class PostController {
     }
 
     @PostMapping("/posts")
-    public ResponseEntity<Post> createPost(@RequestBody Post post) {
-        Optional<User> user = userService.findById(post.getUser().getId());
+    public ResponseEntity<Post> createPost(@RequestBody Post post) throws Exception {
+        long userId = post.getUser().getId();
+        Optional<User> user = userService.findById(userId);
         user.ifPresent(post::setUser);
+        if (user.isEmpty())
+            throw new Exception(String.format("User with id %d is not found", userId));
         return ResponseEntity.ok().body(this.postService.createPost(post));
     }
+
 
     @PutMapping("/posts/{id}")
     public ResponseEntity<Post> updatePost(@PathVariable long id, @RequestBody Post post) {
