@@ -13,6 +13,7 @@ import ph.edu.cksc.college.advweb.blog.model.User;
 import ph.edu.cksc.college.advweb.blog.service.PostService;
 import ph.edu.cksc.college.advweb.blog.service.UserService;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api")
 public class UserController {

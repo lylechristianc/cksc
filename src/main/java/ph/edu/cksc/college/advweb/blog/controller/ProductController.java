@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import ph.edu.cksc.college.advweb.blog.model.Product;
 import ph.edu.cksc.college.advweb.blog.service.ProductService;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api")
 public class ProductController {

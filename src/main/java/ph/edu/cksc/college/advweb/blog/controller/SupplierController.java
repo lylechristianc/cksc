@@ -16,6 +16,7 @@ import ph.edu.cksc.college.advweb.blog.service.SupplierService;
 import java.util.List;
 
 
+@CrossOrigin("*")
 @RestController
 public class SupplierController {
 
