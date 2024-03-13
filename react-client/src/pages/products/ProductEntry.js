@@ -8,6 +8,9 @@ const ProductEntry = () => {
     const [ description, setDescription ] = useState('')
     const [ price, setPrice ] = useState('')
 
+    const [ error, setError ] = useState({})
+    const [ valErrors, setValErrors ] = useState([])
+
     const navigate = useNavigate();
     const { id } = useParams();
 
@@ -22,6 +25,9 @@ const ProductEntry = () => {
                 navigate('/products')
             }).catch (error => {
                 console.log(error)
+                 setError(error)
+                 let errors = error?.response?.data["validation-errors"]
+                 setValErrors(errors ?? [])
             })
         } else {
             createProduct(product).then((response) => {
@@ -29,6 +35,9 @@ const ProductEntry = () => {
                 navigate('/products');
             }).catch (error => {
                 console.log(error)
+                 setError(error)
+                 let errors = error?.response?.data["validation-errors"]
+                 setValErrors(errors ?? [])
             })
         }
 
@@ -64,15 +73,29 @@ const ProductEntry = () => {
                        {
                            pageTitle()
                        }
+                         {
+                                pageTitle()
+                         }
+                         { error.message && (
+                               <>
+                               <p className="text-danger ms-3">{ error.message }</p>
+                               { Object.entries(valErrors).map( item =>
+                                   <p className="text-danger ms-3"><strong>{ item[0] }</strong>{ ': ' + item[1] }</p>
+                               )}
+                               { error?.response?.data?.errors?.map( item =>
+                                    <p className="text-danger ms-3">{ item }</p>
+                               )}
+                               </>
+                         )}
                         <div className = "card-body">
                             <form>
                                 <div className = "form-group mb-2">
-                                    <label className = "form-label"> Name :</label>
+                                    <label className = "form-label"> Name :<span className="text-danger">{ valErrors.name }</span></label>
                                     <input
                                         type = "text"
                                         placeholder = "Enter name"
                                         name = "name"
-                                        className = "form-control"
+                                        className = { "form-control" + (valErrors.name ? " is-invalid" : "") }
                                         value = { name }
                                         onChange = {(e) => setName(e.target.value)}
                                     >
@@ -80,12 +103,12 @@ const ProductEntry = () => {
                                 </div>
 
                                 <div className = "form-group mb-2">
-                                    <label className = "form-label"> Description :</label>
+                                    <label className = "form-label"> Description : <span className="text-danger">{ valErrors.description }</span></label>
                                     <input
                                         type = "text"
                                         placeholder = "Enter description"
                                         name = "description"
-                                        className = "form-control"
+                                        className = { "form-control" + (valErrors.description ? " is-invalid" : "") }
                                         value = { description }
                                         onChange = {(e) => setDescription(e.target.value)}
                                     >
@@ -93,12 +116,12 @@ const ProductEntry = () => {
                                 </div>
 
                                 <div className = "form-group mb-2">
-                                    <label className = "form-label"> Price :</label>
+                                    <label className = "form-label"> Price :<span className="text-danger">{ valErrors.price }</span></label>
                                     <input
                                         type = "text"
                                         placeholder = "Enter price"
                                         name = "price"
-                                        className = "form-control"
+                                        className = { "form-control" + (valErrors.price ? " is-invalid" : "") }
                                         value = { price }
                                         onChange = {(e) => setPrice(e.target.value)}
                                     >
