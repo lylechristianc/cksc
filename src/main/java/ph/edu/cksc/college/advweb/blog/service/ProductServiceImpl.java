@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ph.edu.cksc.college.advweb.blog.exception.ResourceNotFoundException;
@@ -42,8 +44,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProducts(String query) {
-        return productRepository.searchProducts(query);
+    public Page<Product> getProducts(String query, Pageable pageable) {
+        //return productRepository.searchProducts(query, pageable);
+        return productRepository.findByNameContainingOrDescriptionContaining(query, query, pageable);
     }
 
     @Override

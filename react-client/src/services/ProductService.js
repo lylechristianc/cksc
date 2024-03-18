@@ -1,7 +1,7 @@
 import httpClient from "./HttpCommon";
 
-export const listProducts = () => {
-    return httpClient.get('/products')
+export const listProducts = (params) => {
+    return httpClient.get('/products', { params })
 };
 
 export const createProduct = (product) => {

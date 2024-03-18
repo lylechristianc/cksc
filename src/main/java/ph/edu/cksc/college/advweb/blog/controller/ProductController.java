@@ -1,15 +1,18 @@
 package ph.edu.cksc.college.advweb.blog.controller;
 
-import java.util.List;
-import java.util.Optional;
-
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ph.edu.cksc.college.advweb.blog.model.Product;
 import ph.edu.cksc.college.advweb.blog.service.ProductService;
+
+import java.util.List;
 
 @CrossOrigin("*")
 @RestController
@@ -20,8 +23,15 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("/products")
-    public ResponseEntity <List<Product>> getProducts(@RequestParam(name = "query", required = false, defaultValue = "") String query) {
-        return ResponseEntity.ok(productService.getProducts(query));
+    public ResponseEntity<Page<Product>> getProducts(
+            @RequestParam(name = "query", required = false, defaultValue = "") String query,
+            @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(name = "size", required = false, defaultValue = "5") int size,
+            @RequestParam(name = "sort", required = false, defaultValue = "id") String sortBy,
+            @RequestParam(name = "dir", required = false, defaultValue = "ASC") String sortDir) {
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDir), sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return ResponseEntity.ok(productService.getProducts(query, pageable));
     }
 
     @GetMapping("/products/{id}")
