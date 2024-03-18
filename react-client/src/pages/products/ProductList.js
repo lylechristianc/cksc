@@ -19,17 +19,24 @@ const ProductList = () => {
     const handlePageChange = (event, value) => {
         setPage(value);
     };
+    const [sort, setSort] = useState("id");
+    const [dir, setDir] = useState("ASC");
+    const handleSortChange = (accessor) => {
+        const sortDir = accessor === sort && dir === "ASC" ? "DESC" : "ASC";
+        setDir(sortDir);
+        setSort(accessor);
+    };
 
     useEffect(() => {
         getAllProducts();
-    }, [page, pageSize])
+    }, [page, pageSize, sort, dir])
 
     const onChangeSearchText = (e) => {
         const searchText = e.target.value;
         setSearchText(searchText);
     };
 
-    const getRequestParams = (searchText, page, pageSize) => {
+    const getRequestParams = (searchText, page, pageSize, sort, dir) => {
         let params = {};
         if (searchText) {
             params["query"] = searchText;
@@ -40,11 +47,17 @@ const ProductList = () => {
         if (pageSize) {
             params["size"] = pageSize;
         }
+        if (sort) {
+            params["sort"] = sort;
+        }
+        if (dir) {
+            params["dir"] = dir;
+        }
         return params;
     };
 
     const getAllProducts = () => {
-        const params = getRequestParams(searchText, page, pageSize);
+        const params = getRequestParams(searchText, page, pageSize, sort, dir);
         listProducts(params).then((response) => {
             const { content, totalPages } = response.data;
             setProducts(content);
@@ -192,7 +205,17 @@ const ProductList = () => {
                             <tr {...headerGroup.getHeaderGroupProps()}>
                                 {headerGroup.headers.map((column) => (
                                     <th {...column.getHeaderProps()}>
-                                        {column.render("Header")}
+                                        { column.id === "actions" || column.id === "description" ? (
+                                            <span>{ column.Header }</span>
+                                        ) : (
+                                            <span className='text-nowrap' onClick={() => handleSortChange(column.id)}>
+                                                { column.Header }
+                                                <Icon className='text-secondary'>{ column.id !== sort ?
+                                                    "swap_vert" : dir === "ASC" ? "arrow_drop_up" : "arrow_drop_down"
+                                                    //"unfold_more" : dir === "ASC" ? "expand_less" : "expand_more"
+                                                }</Icon>
+                                            </span>
+                                        )}
                                     </th>
                                 ))}
                             </tr>
