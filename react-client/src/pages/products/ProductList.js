@@ -107,6 +107,11 @@ const ProductList = () => {
             }, {
                 Header: "Description",
                 accessor: "description",
+                Cell: (props) => {
+                    return (
+                        <div dangerouslySetInnerHTML = {{ __html: props.value }} />
+                    );
+                },
             }, {
                 Header: "Price",
                 accessor: "price",
@@ -211,8 +216,8 @@ const ProductList = () => {
                                             <span className='text-nowrap' onClick={() => handleSortChange(column.id)}>
                                                 { column.Header }
                                                 <Icon className='text-secondary'>{ column.id !== sort ?
-                                                    "swap_vert" : dir === "ASC" ? "arrow_drop_up" : "arrow_drop_down"
-                                                    //"unfold_more" : dir === "ASC" ? "expand_less" : "expand_more"
+                                                    "swap_vert" : dir === "ASC" ? "arrow_drop_down" : "arrow_drop_up"
+                                                    //"unfold_more" : dir === "ASC" ? "expand_more" : "expand_less"
                                                 }</Icon>
                                             </span>
                                         )}

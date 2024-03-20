@@ -28,7 +28,7 @@ public class Product {
     @NotBlank(message = "Name is Required")
     private String name;
 
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "TEXT")
     @NotBlank(message = "Description is Required")
     private String description;
 

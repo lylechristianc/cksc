@@ -37,7 +37,7 @@ public class Comment {
     private User user;
 
     @JsonView(View.Summary.class)
-    @Column(name = "content")
+    @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
     @JsonView(View.Summary.class)

@@ -36,7 +36,7 @@ public class Post {
     private String title;
 
     @JsonView(View.Summary.class)
-    @Column(name = "content")
+    @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
     @JsonView(View.Summary.class)

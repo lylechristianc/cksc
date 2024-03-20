@@ -1,8 +1,16 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
+import { Editor } from '@tinymce/tinymce-react';
 import { updateProduct, createProduct, getProductById } from '../../services/ProductService';
 
 const ProductEntry = () => {
+
+    const editorRef = useRef(null);
+    const log = () => {
+        if (editorRef.current) {
+            console.log(editorRef.current.getContent());
+        }
+    };
 
     const [ name, setName ] = useState('')
     const [ description, setDescription ] = useState('')
@@ -25,9 +33,9 @@ const ProductEntry = () => {
                 navigate('/products')
             }).catch (error => {
                 console.log(error)
-                 setError(error)
-                 let errors = error?.response?.data["validation-errors"]
-                 setValErrors(errors ?? [])
+                setError(error)
+                let errors = error?.response?.data["validation-errors"]
+                setValErrors(errors ?? [])
             })
         } else {
             createProduct(product).then((response) => {
@@ -35,9 +43,9 @@ const ProductEntry = () => {
                 navigate('/products');
             }).catch (error => {
                 console.log(error)
-                 setError(error)
-                 let errors = error?.response?.data["validation-errors"]
-                 setValErrors(errors ?? [])
+                setError(error)
+                let errors = error?.response?.data["validation-errors"]
+                setValErrors(errors ?? [])
             })
         }
 
@@ -70,27 +78,24 @@ const ProductEntry = () => {
            <div className = "container">
                 <div className = "row">
                     <div className = "card col-md-6 offset-md-3 offset-md-3">
-                       {
-                           pageTitle()
-                       }
-                         {
-                                pageTitle()
-                         }
-                         { error.message && (
-                               <>
-                               <p className="text-danger ms-3">{ error.message }</p>
-                               { Object.entries(valErrors).map( item =>
-                                   <p className="text-danger ms-3"><strong>{ item[0] }</strong>{ ': ' + item[1] }</p>
-                               )}
-                               { error?.response?.data?.errors?.map( item =>
-                                    <p className="text-danger ms-3">{ item }</p>
-                               )}
-                               </>
-                         )}
+                    {
+                        pageTitle()
+                    }
+                    { error.message && (
+                        <>
+                        <p className="text-danger ms-3">{ error.message }</p>
+                        { Object.entries(valErrors).map( item =>
+                            <p className="text-danger ms-3"><strong>{ item[0] }</strong>{ ': ' + item[1] }</p>
+                        )}
+                        { error?.response?.data?.errors?.map( item =>
+                            <p className="text-danger ms-3">{ item }</p>
+                        )}
+                        </>
+                    )}
                         <div className = "card-body">
                             <form>
                                 <div className = "form-group mb-2">
-                                    <label className = "form-label"> Name :<span className="text-danger">{ valErrors.name }</span></label>
+                                    <label className = "form-label"> Name : <span className="text-danger">{ valErrors.name }</span></label>
                                     <input
                                         type = "text"
                                         placeholder = "Enter name"
@@ -104,19 +109,33 @@ const ProductEntry = () => {
 
                                 <div className = "form-group mb-2">
                                     <label className = "form-label"> Description : <span className="text-danger">{ valErrors.description }</span></label>
-                                    <input
-                                        type = "text"
-                                        placeholder = "Enter description"
+                                    <Editor
+                                        tinymceScriptSrc = { '/tinymce/tinymce.min.js' }
+                                        onInit = { (evt, editor) => editorRef.current = editor }
                                         name = "description"
                                         className = { "form-control" + (valErrors.description ? " is-invalid" : "") }
                                         value = { description }
-                                        onChange = {(e) => setDescription(e.target.value)}
-                                    >
-                                    </input>
+                                        onEditorChange = { (content) => setDescription(content) }
+                                        init= {{
+                                            height: 500,
+                                            menubar: false,
+                                            plugins: [
+                                                'advlist', 'autolink', 'lists', 'link', 'image', 'charmap',
+                                                'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                                                'insertdatetime', 'media', 'table', 'preview', 'help', 'wordcount',
+                                                'emoticons'
+                                            ],
+                                            toolbar: 'undo redo | blocks | ' +
+                                                'bold italic forecolor backcolor emoticons | alignleft aligncenter ' +
+                                                'alignright alignjustify | bullist numlist outdent indent | ' +
+                                                'removeformat | help',
+                                            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+                                        }}
+                                    />
                                 </div>
 
                                 <div className = "form-group mb-2">
-                                    <label className = "form-label"> Price :<span className="text-danger">{ valErrors.price }</span></label>
+                                    <label className = "form-label"> Price : <span className="text-danger">{ valErrors.price }</span></label>
                                     <input
                                         type = "text"
                                         placeholder = "Enter price"
