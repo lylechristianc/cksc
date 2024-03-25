@@ -116,6 +116,14 @@ const ProductList = () => {
                 Header: "Price",
                 accessor: "price",
             }, {
+                Header: "Picture",
+                accessor: "picture",
+                Cell: (props) => {
+                    return (
+                        <img className='img-fluid' alt='Picture' src={ process.env.REACT_APP_SPRING_BOOT_BASE_URL + '/images/' + props.value } />
+                    );
+                },
+            }, {
                 Header: "Date Updated",
                 accessor: "updatedAt",
                 Cell: (props) => {
@@ -216,8 +224,8 @@ const ProductList = () => {
                                             <span className='text-nowrap' onClick={() => handleSortChange(column.id)}>
                                                 { column.Header }
                                                 <Icon className='text-secondary'>{ column.id !== sort ?
-                                                    "swap_vert" : dir === "ASC" ? "arrow_drop_down" : "arrow_drop_up"
-                                                    //"unfold_more" : dir === "ASC" ? "expand_more" : "expand_less"
+                                                    "swap_vert" : dir === "ASC" ? "arrow_drop_up" : "arrow_drop_down"
+                                                    //"unfold_more" : dir === "ASC" ? "expand_less" : "expand_more"
                                                 }</Icon>
                                             </span>
                                         )}

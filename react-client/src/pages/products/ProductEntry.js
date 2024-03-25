@@ -15,6 +15,7 @@ const ProductEntry = () => {
     const [ name, setName ] = useState('')
     const [ description, setDescription ] = useState('')
     const [ price, setPrice ] = useState('')
+    const [ picture, setPicture ] = useState(null)
 
     const [ error, setError ] = useState({})
     const [ valErrors, setValErrors ] = useState([])
@@ -29,7 +30,15 @@ const ProductEntry = () => {
 
         console.log(product);
         if (id) {
-            updateProduct(id, product).then((response) => {
+            let formData = new FormData();
+            // see https://stackoverflow.com/questions/63021659/spring-api-request-giving-content-type-application-octet-stream-not-supported
+            const json = JSON.stringify(product);
+            const data = new Blob([json], {
+                type: 'application/json'
+            });
+            formData.append("product", data);
+            formData.append("picture", picture);
+            updateProduct(id, formData).then((response) => {
                 navigate('/products')
             }).catch (error => {
                 console.log(error)
@@ -48,7 +57,6 @@ const ProductEntry = () => {
                 setValErrors(errors ?? [])
             })
         }
-
     }
 
     useEffect(() => {
@@ -143,6 +151,18 @@ const ProductEntry = () => {
                                         className = { "form-control" + (valErrors.price ? " is-invalid" : "") }
                                         value = { price }
                                         onChange = {(e) => setPrice(e.target.value)}
+                                    >
+                                    </input>
+                                </div>
+
+                                <div className = "form-group mb-2">
+                                    <label className = "form-label"> Picture : <span className="text-danger">{ valErrors.picture }</span></label>
+                                    <input
+                                        type = "file"
+                                        placeholder = "Upload picture"
+                                        name = "picture"
+                                        className = { "form-control" + (valErrors.picture ? " is-invalid" : "") }
+                                        onChange = {(e) => setPicture(e.target.files[0])}
                                     >
                                     </input>
                                 </div>

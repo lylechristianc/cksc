@@ -13,7 +13,11 @@ export const getProductById = (productId) => {
 }
 
 export const updateProduct = (productId, product) => {
-    return httpClient.put('/products/' + productId, product);
+    return httpClient.post('/products/' + productId, product, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        }
+    });
 }
 
 export const deleteProduct = (productId) => {

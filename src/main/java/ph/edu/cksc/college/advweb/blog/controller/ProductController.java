@@ -7,12 +7,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ph.edu.cksc.college.advweb.blog.model.Product;
 import ph.edu.cksc.college.advweb.blog.service.ProductService;
 
-import java.util.List;
+import java.io.IOException;
 
 @CrossOrigin("*")
 @RestController
@@ -44,10 +46,13 @@ public class ProductController {
         return ResponseEntity.ok().body(this.productService.createProduct(product));
     }
 
-    @PutMapping("/products/{id}")
-    public ResponseEntity <Product> updateProduct(@PathVariable long id, @Valid @RequestBody Product product) {
+    @PostMapping(path = "/products/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE )
+    public ResponseEntity <Product> updateProduct(
+            @PathVariable long id,
+            @Valid @RequestPart Product product,
+            @RequestPart (value="picture", required = false) MultipartFile picture) throws IOException {
         product.setId(id);
-        return ResponseEntity.ok().body(this.productService.updateProduct(product));
+        return ResponseEntity.ok().body(this.productService.updateProduct(product, picture));
     }
 
     @DeleteMapping("/products/{id}")

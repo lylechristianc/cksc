@@ -37,6 +37,9 @@ public class Product {
     @NotNull(message = "Price is Required")
     private BigDecimal price;
 
+    @Column(name = "picture")
+    private String picture;
+
     @CreationTimestamp
     private Date createdAt;
 
