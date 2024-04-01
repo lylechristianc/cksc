@@ -2,6 +2,7 @@ package ph.edu.cksc.college.advweb.blog.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -18,7 +19,6 @@ import ph.edu.cksc.college.advweb.blog.service.UserService;
 
 import java.util.List;
 import java.util.Optional;
-
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/api")
@@ -33,9 +33,9 @@ public class PostController {
     @Autowired
     private UserService userService;
 
-    @JsonView(View.Summary.class)
+    //@JsonView(View.Summary.class)
     @GetMapping("/posts")
-    public ResponseEntity<List<Post>> getPosts(
+    public ResponseEntity<Page<Post>> getPosts(
             @RequestParam(name = "query", required = false, defaultValue = "") String query,
             @RequestParam(name = "page", required = false, defaultValue = "0") int page,
             @RequestParam(name = "size", required = false, defaultValue = "5") int size,
@@ -43,7 +43,7 @@ public class PostController {
             @RequestParam(name = "dir", required = false, defaultValue = "ASC") String sortDir) {
         Sort sort = Sort.by(Sort.Direction.fromString(sortDir), sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
-        return ResponseEntity.ok(postService.getPosts(query, pageable).getContent());
+        return ResponseEntity.ok(postService.getPosts(query, pageable));
     }
 
     @JsonView(View.Summary.class)

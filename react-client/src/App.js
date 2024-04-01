@@ -4,6 +4,8 @@ import FooterComponent from './components/FooterComponent';
 import  HeaderComponent  from './components/HeaderComponent';
 import ProductList from './pages/products/ProductList';
 import ProductEntry from './pages/products/ProductEntry';
+import PostList from './pages/posts/PostList';
+import PostEntry from './pages/posts/PostEntry';
 
 function App() {
   return (
@@ -16,6 +18,9 @@ function App() {
               <Route path = "/products" element = { <ProductList /> }></Route>
               <Route path = "/add-product" element = { <ProductEntry />} ></Route>
               <Route path = "/edit-product/:id" element = { <ProductEntry />}></Route>
+              <Route path = "/posts" element = { <PostList /> }></Route>
+              <Route path = "/add-post" element = { <PostEntry />} ></Route>
+              <Route path = "/edit-post/:id" element = { <PostEntry />}></Route>
             </Routes>
         </div>
         <FooterComponent />
