@@ -1,5 +1,6 @@
 package ph.edu.cksc.college.advweb.blog.service;
 
+import java.util.List;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,13 +25,11 @@ import ph.edu.cksc.college.advweb.blog.repository.ProductRepository;
 @Transactional
 public class ProductServiceImpl implements ProductService {
 
-
     @Autowired
     private ProductRepository productRepository;
 
     public ProductServiceImpl() throws IOException {
     }
-
 
     @Override
     public Product createProduct(Product product) {

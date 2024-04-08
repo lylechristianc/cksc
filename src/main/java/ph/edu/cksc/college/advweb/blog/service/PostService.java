@@ -21,5 +21,4 @@ public interface PostService {
     List<Post> findByUserId(long userId);
 
     Optional<Post> findById(long id);
-
 }

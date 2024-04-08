@@ -1,8 +1,6 @@
 package ph.edu.cksc.college.advweb.blog.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ph.edu.cksc.college.advweb.blog.exception.ResourceNotFoundException;
@@ -38,11 +36,6 @@ public class CommentServiceImpl implements CommentService {
         } else {
             throw new ResourceNotFoundException("Record not found with id : " + comment.getId());
         }
-    }
-
-    @Override
-    public Page<Comment> getComments(String query, Pageable pageable) {
-        return null;
     }
 
     @Override

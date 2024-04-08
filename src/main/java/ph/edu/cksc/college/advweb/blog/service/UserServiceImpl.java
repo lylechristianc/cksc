@@ -10,16 +10,12 @@ import ph.edu.cksc.college.advweb.blog.exception.ResourceNotFoundException;
 import ph.edu.cksc.college.advweb.blog.model.User;
 import ph.edu.cksc.college.advweb.blog.repository.UserRepository;
 
-import javax.swing.text.html.Option;
-
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
 
-
     @Autowired
     private UserRepository userRepository;
-
 
     @Override
     public User createUser(User user) {

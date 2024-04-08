@@ -9,12 +9,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ph.edu.cksc.college.advweb.blog.model.Product;
 import ph.edu.cksc.college.advweb.blog.service.ProductService;
 
 import java.io.IOException;
+import java.util.List;
 
 @CrossOrigin("*")
 @RestController
@@ -42,11 +44,13 @@ public class ProductController {
     }
 
     @PostMapping("/products")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity <Product> createProduct(@Valid @RequestBody Product product) {
         return ResponseEntity.ok().body(this.productService.createProduct(product));
     }
 
     @PostMapping(path = "/products/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE )
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity <Product> updateProduct(
             @PathVariable long id,
             @Valid @RequestPart Product product,
@@ -56,6 +60,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/products/{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public HttpStatus deleteProduct(@PathVariable long id) {
         this.productService.deleteProduct(id);
         return HttpStatus.OK;

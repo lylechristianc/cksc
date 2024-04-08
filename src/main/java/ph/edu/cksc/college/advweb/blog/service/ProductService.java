@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ph.edu.cksc.college.advweb.blog.model.Product;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface ProductService {
     Product createProduct(Product product);
