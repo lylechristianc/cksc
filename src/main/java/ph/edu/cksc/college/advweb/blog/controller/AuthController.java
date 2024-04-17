@@ -83,7 +83,7 @@ public class AuthController {
         if (userRepository.existsByLoginName(signUpRequest.getLoginName())) {
             return ResponseEntity
                     .badRequest()
-                    .body(new MessageResponse("Error: Email is already in use!"));
+                    .body(new MessageResponse("Error: Login name is already in use!"));
         }
 
         // Create new user's account

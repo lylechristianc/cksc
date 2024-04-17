@@ -8,12 +8,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
+
     @Query("SELECT u FROM User u WHERE " +
             "u.name LIKE CONCAT('%',:query, '%')" +
             "Or u.loginName LIKE CONCAT('%', :query, '%')")
     List<User> searchUsers(String query);
 
     Optional<User> findByName(String name);
+
+    Optional<User> findByNameOrLoginName(String name, String loginName);
 
     Boolean existsByName(String name);
 
