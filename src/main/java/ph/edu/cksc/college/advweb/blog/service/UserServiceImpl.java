@@ -1,8 +1,5 @@
 package ph.edu.cksc.college.advweb.blog.service;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,12 +7,16 @@ import ph.edu.cksc.college.advweb.blog.exception.ResourceNotFoundException;
 import ph.edu.cksc.college.advweb.blog.model.User;
 import ph.edu.cksc.college.advweb.blog.repository.UserRepository;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
 
     @Override
     public User createUser(User user) {
@@ -64,11 +65,15 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new ResourceNotFoundException("Record not found with id : " + userId);
         }
-
     }
 
     @Override
     public Optional<User> findById(long id) {
         return userRepository.findById(id);
+    }
+
+    @Override
+    public Optional<User> findByName(String name) {
+        return userRepository.findByName(name);
     }
 }

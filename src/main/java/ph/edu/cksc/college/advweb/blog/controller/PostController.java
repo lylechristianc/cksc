@@ -2,18 +2,18 @@ package ph.edu.cksc.college.advweb.blog.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import ph.edu.cksc.college.advweb.blog.model.Comment;
 import ph.edu.cksc.college.advweb.blog.model.Post;
 import ph.edu.cksc.college.advweb.blog.model.User;
 import ph.edu.cksc.college.advweb.blog.model.View;
-import ph.edu.cksc.college.advweb.blog.service.CommentService;
+import ph.edu.cksc.college.advweb.blog.service.AuthenticatedUserService;
 import ph.edu.cksc.college.advweb.blog.service.PostService;
 import ph.edu.cksc.college.advweb.blog.service.UserService;
 
@@ -29,14 +29,14 @@ public class PostController {
     private PostService postService;
 
     @Autowired
-    private CommentService commentService;
-
-    @Autowired
     private UserService userService;
 
-    //@JsonView(View.Summary.class)
+    @Autowired
+    private AuthenticatedUserService authenticatedUserService;
+
+    @JsonView(View.Summary.class)
     @GetMapping("/posts")
-    public ResponseEntity<Page<Post>> getPosts(
+    public ResponseEntity<List<Post>> getPosts(
             @RequestParam(name = "query", required = false, defaultValue = "") String query,
             @RequestParam(name = "page", required = false, defaultValue = "0") int page,
             @RequestParam(name = "size", required = false, defaultValue = "5") int size,
@@ -44,19 +44,21 @@ public class PostController {
             @RequestParam(name = "dir", required = false, defaultValue = "ASC") String sortDir) {
         Sort sort = Sort.by(Sort.Direction.fromString(sortDir), sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
-        return ResponseEntity.ok(postService.getPosts(query, pageable));
+        return ResponseEntity.ok(postService.getPosts(query, pageable).getContent());
     }
 
     @JsonView(View.Summary.class)
     @GetMapping("/posts/{id}")
-    public ResponseEntity <Post> getPostById(@PathVariable long id) {
+    public ResponseEntity<Post> getPostById(@PathVariable long id) {
         return ResponseEntity.ok().body(postService.getPostById(id));
     }
 
     @PostMapping("/posts")
-    public ResponseEntity <Post> createPost(@RequestBody Post post) throws Exception {
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public ResponseEntity<Post> createPost(@RequestBody Post post) throws Exception {
         long userId = post.getUser().getId();
-        Optional<User> user = userService.findById(userId);
+        String username =  SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> user = userService.findByName(username);
         user.ifPresent(post::setUser);
         if (user.isEmpty())
             throw new Exception(String.format("User with id %d is not found", userId));
@@ -64,19 +66,16 @@ public class PostController {
     }
 
     @PutMapping("/posts/{id}")
-    public ResponseEntity <Post> updatePost(@PathVariable long id, @RequestBody Post post) {
+    @PreAuthorize("hasRole('ADMIN') or @authenticatedUserService.hasId(#id)")
+    public ResponseEntity<Post> updatePost(@PathVariable long id, @RequestBody Post post) {
         post.setId(id);
         return ResponseEntity.ok().body(this.postService.updatePost(post));
     }
 
     @DeleteMapping("/posts/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @authenticatedUserService.hasId(#id)")
     public HttpStatus deletePost(@PathVariable long id) {
         this.postService.deletePost(id);
         return HttpStatus.OK;
-    }
-
-    @GetMapping("/comments/{postId}/comments")
-    public List<Comment> getCommentsByPost(@PathVariable(value = "postId") Long postId) {
-        return commentService.findByPostId(postId);
     }
 }
